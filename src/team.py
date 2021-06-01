@@ -24,8 +24,9 @@ class Team:
             header_info['logo'] = header.find_all('div', class_='team-header-logo')[0].find_all('img')[0]['src'][2:]
             header_info['website'] = soup.find_all('div',class_='team-header-website')[0].find_all('a')[0].get_text().strip()
             header_info['country'] = soup.find_all('div',class_='team-header-country')[0].get_text().strip()
-            print(header_info)
+            header_info['twitter'] = soup.find_all('div',class_='team-header-twitter')[0].find_all('a')[0]['href']
+        
+        
         basic_info()
-
-
+        
         return { "team" : id, "header" : header_info}
