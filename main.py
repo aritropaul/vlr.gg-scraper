@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
-import src.news
-import src.matches
-import os
+from src.news import News
+from src.matches import Matches
+from src.team import Team
+from src.player import Player
 
 app = FastAPI()
 
@@ -11,20 +12,24 @@ async def health_check():
 
 @app.get("/news")
 async def news():
-    return src.news.news()
-
-@app.get("/news/{id}")
-async def news(id):
-    return src.news.article(id)
+    return News.news()
 
 @app.get("/upcoming")
 async def matches():
-    return src.matches.upcoming_matches()
+    return Matches.upcoming_matches()
 
 @app.get("/results")
 async def matches():
-    return src.matches.recent_matches()
+    return Matches.recent_matches()
 
 @app.get("/match/{id}")
 async def match(id):
-    return src.matches.match(id)
+    return Matches.match(id)
+
+@app.get("/team/{id}")
+async def team(id):
+    return Team.team(id)
+
+@app.get("/player/{id}")
+async def player(id):
+    return Player.player(id)
