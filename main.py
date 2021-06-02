@@ -4,6 +4,7 @@ from src.matches import Matches
 from src.team import Team
 from src.player import Player
 from src.events import Events
+from src.streams import Streams
 
 app = FastAPI()
 
@@ -22,6 +23,10 @@ async def matches():
 @app.get("/results")
 async def matches():
     return Matches.recent_matches()
+
+@app.get("/streams")
+async def streams():
+    return Streams.streams()
 
 @app.get("/match/{id}")
 async def match(id):
