@@ -70,6 +70,29 @@ class Player:
                 prize = place.find('div').find_all('div')[1].find_all('span')[1].get_text().strip()
             eventPlacement.append( { 'name': eventName, 'position': podium, 'prize': prize } )
 
+        stats = []
+        statRows = soup.find_all('table', class_="wf-table")[0].find('tbody').find_all('tr')
+        if len(statRows) > 0:
+            for row in statRows:
+                agent = "https://vlr.gg" + row.find_all('td')[0].find('img')['src']
+                pick = row.find_all('td')[1].get_text().strip()
+                rounds = row.find_all('td')[2].get_text().strip()
+                acs = row.find_all('td')[3].get_text().strip()
+                kd = row.find_all('td')[4].get_text().strip()
+                adr = row.find_all('td')[5].get_text().strip()
+                kpr = row.find_all('td')[6].get_text().strip()
+                apr = row.find_all('td')[7].get_text().strip()
+                fkpr = row.find_all('td')[8].get_text().strip()
+                fdpr = row.find_all('td')[9].get_text().strip()
+                k = row.find_all('td')[10].get_text().strip()
+                d = row.find_all('td')[11].get_text().strip()
+                a = row.find_all('td')[12].get_text().strip()
+                fk = row.find_all('td')[13].get_text().strip()
+                fd = row.find_all('td')[14].get_text().strip()
+                stat = { 'agent': agent, 'pick': pick, 'rounds': rounds, 'acs': acs, 'kd': kd, 'adr': adr, 'kpr': kpr, 'apr':apr, 'fkpr': fkpr, 'fdpr': fdpr, 'kills':k, 'deaths': d, 'assists': a, 'fk': fk, 'fd': fd}
+                stats.append(stat)
+
+
         return { "name" : name, 
                 "real_name" : real_name,
                 "twitter": twitterHandle, 
@@ -78,5 +101,6 @@ class Player:
                 "team": { 'name': teamName, 'icon': teamIcon, 'desc': desc},
                 "past_teams" : pastTeams,
                 "recent" : recentMatches,
+                "stats": stats,
                 "placement": { 'total' : total, 'events': eventPlacement }
         }
