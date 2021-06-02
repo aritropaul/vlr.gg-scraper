@@ -24,10 +24,15 @@ class Player:
 
         country = header.find_all('i', class_="flag")[0].get('class')[1].replace('mod-', '')
         container1 = soup.find_all('div', class_="player-summary-container-1")[0]
-        currentTeamCard = container1.find_all('div', class_="wf-card")[2].find('a')
-        teamIcon = "https:" + currentTeamCard.find('img')['src']
-        teamName = currentTeamCard.find_all('div')[1].find('div').get_text().strip()
-        desc = currentTeamCard.find_all('div')[1].find_all('div')[2].get_text().strip()
+        if len(container1.find_all('div', class_="wf-card")) > 2:
+            currentTeamCard = container1.find_all('div', class_="wf-card")[2].find('a')
+            teamIcon = "https:" + currentTeamCard.find('img')['src']
+            teamName = currentTeamCard.find_all('div')[1].find('div').get_text().strip()
+            desc = currentTeamCard.find_all('div')[1].find_all('div')[2].get_text().strip()
+        else:
+            teamIcon = ""
+            teamName = ""
+            desc = ""
 
         recentMatches = []
         matches = container1.find_all('div', class_="wf-card")[1].find_all('a')
@@ -35,7 +40,10 @@ class Player:
             stage = match.find_all('div', class_="rm-item-event")[0].find_all('div', class_="text-of")[0].get_text().strip()
             event = match.find_all('div', class_="rm-item-event")[0].find_all('div', class_="text-of")[1].get_text().strip()
             score = match.find_all('span', class_="rf")[0].get_text().strip() + "-" + match.find_all('span', class_="ra")[0].get_text().strip()
-            opponentIcon = "https:" + match.find_all('div', class_="rm-item-opponent")[0].find('img')['src']
+            if match.find_all('div', class_="rm-item-opponent")[0].find('img') != None:
+                opponentIcon = "https:" + match.find_all('div', class_="rm-item-opponent")[0].find('img')['src']
+            else :
+                opponentIcon = ""
             opponent = match.find_all('div', class_="rm-item-opponent")[0].find_all('div', class_="text-of")[0].get_text().strip()
             date = match.find_all('div', class_="rm-item-date")[0].get_text().strip().replace('\t', '').replace('\n', ' - ')
             match = {'stage' : stage,
@@ -59,8 +67,8 @@ class Player:
 
         eventPlacement = []
         container2 = soup.find_all('div', class_="player-summary-container-2")[0]
-        events = container2.find_all('div',class_="wf-card")[1].find_all('a')
-        total = container2.find_all('div',class_="wf-card")[1].find('div').find('span').get_text().strip()
+        events = container2.find_all('div',class_="wf-card")[-1].find_all('a')
+        total = container2.find_all('div',class_="wf-card")[-1].find('div').find('span').get_text().strip()
         for place in events:
             eventName = place.find_all('div', class_="text-of")[0].get_text().strip()
             podium = place.find('div').find_all('div')[1].find_all('span')[0].get_text().strip().replace('\t', '').replace('\n', ' ')
@@ -71,8 +79,8 @@ class Player:
             eventPlacement.append( { 'name': eventName, 'position': podium, 'prize': prize } )
 
         stats = []
-        statRows = soup.find_all('table', class_="wf-table")[0].find('tbody').find_all('tr')
-        if len(statRows) > 0:
+        if len(soup.find_all('table', class_="wf-table")) > 0:
+            statRows = soup.find_all('table', class_="wf-table")[0].find('tbody').find_all('tr')
             for row in statRows:
                 agent = "https://vlr.gg" + row.find_all('td')[0].find('img')['src']
                 pick = row.find_all('td')[1].get_text().strip()
@@ -93,7 +101,9 @@ class Player:
                 stats.append(stat)
 
 
-        return { "name" : name, 
+        return {
+                "id": id, 
+                "name" : name, 
                 "real_name" : real_name,
                 "twitter": twitterHandle, 
                 "twitch": twitchHandle,
