@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from requests.api import head
 
 class Player:
     """

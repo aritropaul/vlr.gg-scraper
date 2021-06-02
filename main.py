@@ -3,6 +3,7 @@ from src.news import News
 from src.matches import Matches
 from src.team import Team
 from src.player import Player
+from src.events import Events
 
 app = FastAPI()
 
@@ -33,3 +34,12 @@ async def team(id):
 @app.get("/player/{id}")
 async def player(id):
     return Player.player(id)
+
+@app.get("/events")
+async def events():
+    return Events.events("")
+
+@app.get("/events/{id}")
+async def events(id):
+    events = Events()
+    return events.region(id)
