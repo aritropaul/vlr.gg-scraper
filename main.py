@@ -45,7 +45,12 @@ async def events():
     events = Events()
     return events.region("all")
 
-@app.get("/events/{id}")
+@app.get("/events/{region}")
+async def events(region):
+    events = Events()
+    return events.region(region)
+
+@app.get("/event/{id}")
 async def events(id):
     events = Events()
-    return events.region(id)
+    return events.event(id)
