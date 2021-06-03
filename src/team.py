@@ -10,11 +10,11 @@ class Team:
     def team(id):
         
         URL = 'https://www.vlr.gg/team/'+id
-        print(URL)
         page = requests.get(URL)
         soup = BeautifulSoup(page.content, 'html.parser')
         header_info = {}
         roster_info = []
+        transaction_info = []
         def basic_info():
             """
             Gets basic info based on the team id
@@ -58,8 +58,24 @@ class Team:
                     roster_player['player_role'] = roster_item.find_all('div',class_='team-roster-item-name-role')[0].get_text().strip()
                 roster_info.append(roster_player)
 
+        def transaction():
+            """
+            Gets player transactions
+            """
+            transaction_url = 'https://www.vlr.gg/team/transactions/' + id
+            transaction_page = requests.get(transaction_url)
+            bs = BeautifulSoup(transaction_page.content,'html.parser')
+            for player in bs.find_all('div',class_="wf-module-item"):
+                player_info = {}
+                player_info['alias_name'] = player.find_all('a')[0].get_text().strip()
+                player_info['id'] = player.find_all('a')[0]['href'].split('/')[2]
+                player_info['country'] = player.find_all('i',class_=True)[0]['class'][1].split('-')[-1]
+                player_info['transaction'] = player.find_all('div')[1].find_all('span')[0].get_text().strip()
+                player_info['transaction_date'] = player.find_all('div')[2].get_text().strip().replace('\n','').replace('\t','').replace('on','').strip()
+                transaction_info.append(player_info)
 
 
         basic_info()
         roster()
-        return { "team" : id, "header" : header_info, "roster": roster_info }
+        transaction()
+        return { "team" : id, "header" : header_info, "roster": roster_info, "transactions": transaction_info }
