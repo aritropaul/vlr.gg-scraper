@@ -42,7 +42,8 @@ async def player(id):
 
 @app.get("/events")
 async def events():
-    return Events.events("")
+    events = Events()
+    return events.region("all")
 
 @app.get("/events/{id}")
 async def events(id):
