@@ -23,7 +23,7 @@ class News:
                     news = {}
                     title = newsItem.find_all('div', class_="news-item-title")[0].get_text().strip()
                     link = newsItem.get('href')
-                    news["date"] = key.get_text().strip()
+                    news["date"] = key.get_text().strip().split(" \n")[0]
                     news["news"] = title
                     news["id"] = link.split("/")[1].split("/")[0]
                     newsDict.append(news)
