@@ -26,9 +26,11 @@ class Team:
             else:
                 header_info['short_name'] = ""
             header_info['logo'] = "https:" + header.find_all('div', class_='team-header-logo')[0].find_all('img')[0]['src']
-            header_info['website'] = "https://" + soup.find_all('div',class_='team-header-website')[0].find_all('a')[0].get_text().strip()
+            if len(soup.find_all('div',class_='team-header-website')) > 0:
+                header_info['website'] = "https://" + soup.find_all('div',class_='team-header-website')[0].find_all('a')[0].get_text().strip()
             header_info['country'] = soup.find_all('div',class_='team-header-country')[0].get_text().strip()
-            header_info['twitter'] = soup.find_all('div',class_='team-header-twitter')[0].find_all('a')[0]['href']
+            if len(soup.find_all('div',class_='team-header-twitter')) > 0:
+                header_info['twitter'] = soup.find_all('div',class_='team-header-twitter')[0].find_all('a')[0]['href']
             header_info['country'] = soup.find_all('div',class_='team-header-country')[0].find_all('i',class_=True)[0]['class'][1].split('-')[-1]
         
         def roster():
@@ -41,7 +43,8 @@ class Team:
                 roster_player = {}
                 roster_player['id'] = roster_item.find('a')['href'].split('/')[2]
                 roster_player['alias_name'] = alias_name
-                roster_player['real_name'] = roster_item.find_all('div',class_='team-roster-item-name-real')[0].get_text().strip()
+                if len(roster_item.find_all('div',class_='team-roster-item-name-real')) > 0:
+                    roster_player['real_name'] = roster_item.find_all('div',class_='team-roster-item-name-real')[0].get_text().strip()
                 roster_player['country'] = roster_item.find_all('div',class_='team-roster-item-name-alias')[0].find_all('i',class_=True)[0]['class'][1].split('-')[-1]
                 roster_player['is_captain'] = False
                 if len(roster_item.find_all('i',class_='fa-star')) >0 :
