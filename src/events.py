@@ -119,6 +119,34 @@ class Events:
                     lowerBracket.append(self.bracketParser(col))
             event['bracket'] = [{ 'upper' : upperBracket, 'lower': lowerBracket }]
 
+        participants = []
+        if len(soup.find_all('div', class_="event-teams-container")) > 0:
+            teamsContainer = soup.find_all('div', class_="event-teams-container")[0]
+            teamItems = teamsContainer.find_all('div', class_="wf-card event-team")
+            for team in teamItems:
+                participant = {}
+                roster = []
+                participant['team'] = team.find_all('a', class_="event-team-name")[0].get_text().strip()
+                participant['id'] = team.find_all('a', class_="event-team-name")[0]['href'].split('/')[2]
+                img = team.find_all('img', class_="event-team-players-mask-team")[0]['src']
+                if img == '/img/vlr/tmp/vlr.png':
+                    img = "https://vlr.gg" + img
+                else:
+                    img = "https:" + img
+                participant['img'] = img
+                participant['seed'] = team.find_all('div', class_="wf-module-item")[0].get_text().strip()
+                players = team.find_all('a', class_="event-team-players-item")
+                for player in players:
+                    playerID = player['href'].split('/')[2]
+                    playerName = player.get_text().strip()
+                    country = player.find_all('i', class_="flag")[0].get('class')[1].replace('mod-', '')
+                    roster.append({'playerID': playerID, 'playerName': playerName, 'country': country})
+                participant['roster'] = roster
+                participants.append(participant)
+            event['participants'] = participants
+
+
+
         URL = "https://www.vlr.gg/event/matches/" + id + "/?series_id=all"
         page = requests.get(URL)
         soup = BeautifulSoup(page.content, 'html.parser')
