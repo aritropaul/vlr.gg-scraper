@@ -315,7 +315,7 @@ class Matches:
                 img = "https://vlr.gg" + img
             else:
                 img = "https:" + img
-            h2h['event'] = { 'img': img, 'event': h2hEvent, 'stage': h2hStage }
+            h2h['event'] = { 'img': img, 'series': h2hEvent, 'stage': h2hStage }
             h2h['date'] = matchLink.find_all('div',class_="match-h2h-matches-date")[0].get_text().strip()
             images = matchLink.find_all('img',class_="match-h2h-matches-team")
             score1 = matchLink.find_all('span', class_="rf")[0]
