@@ -186,6 +186,19 @@ class Matches:
         team2img = matchHeader.find_all("a", class_="match-header-link")[1].find('img')['src']
         score = matchHeader.find_all("div", class_="match-header-vs-score")[0].find_all("div", class_="js-spoiler")[0].get_text().replace('\n', '').replace('\t', '')
         note = soup.find_all("div", class_="match-header-note")[0].get_text().strip()
+
+        event = {}
+        eventLink = soup.find_all("a", class_="match-header-event")[0]
+        event['id'] = eventLink['href'].split('/')[2]
+        img = eventLink.find('img')['src']
+        if img == '/img/vlr/tmp/vlr.png':
+            img = "https://vlr.gg" + img
+        else:
+            img = "https:" + img
+        event['img'] = img
+        event['series'] = eventLink.find_all('div')[0].find_all('div')[0].get_text().strip()
+        event['stage'] = eventLink.find_all('div',class_="match-header-event-series")[0].get_text().strip().replace('\t', '').replace('\n', '')
+        event['date'] = soup.find_all('div',class_="match-header-date")[0].get_text().strip().replace('\t', '').replace('\n', ' ').replace('    ', ', ').split('   ')[0]
         team1 = { 'name' : team1name, 'img' : "https:"+team1img }
         team2 = { 'name' : team2name, 'img' : "https:"+team2img}
         teams = [team1, team2]
@@ -282,14 +295,47 @@ class Matches:
                         title = agent['title']
                         src = agent['src']
                         acs = ACS
-                        agents.append({'name' : title, 'img': src})
+                        agents.append({'name' : title, 'img': "https://vlr.gg" + src})
                     member = {'name': name, 'team': teamName, 'agents': agents, 'acs': acs, 'kills' : kills, 'deaths': deaths, 'assists': assists, 'HSpercent': hs}
                     members.append(member)
                     print(name, teamName, agents)
                 print('')
             mapData.append([{'map': mapName, 'teams': [team1Obj, team2Obj], 'members': members, 'rounds': rounds}])
 
-        return {'teams': teams, 'score': score, 'note': note, 'data': mapData }
+        head2headContainer = soup.find_all('div',class_="match-h2h-matches")[0]
+        h2hMatchLinks = head2headContainer.find_all('a',class_="wf-module-item mod-h2h")
+        h2hMatches = []
+        for matchLink in h2hMatchLinks:
+            h2h = {}
+            h2h['id'] = matchLink['href'].split('/')[1]
+            h2hEvent = matchLink.find_all('div',class_="match-h2h-matches-event-name text-of")[0].get_text().strip()
+            h2hStage = matchLink.find_all('div',class_="match-h2h-matches-event-series text-of")[0].get_text().strip()
+            img = matchLink.find_all('div',class_="match-h2h-matches-event")[0].find('img')['src']
+            if img == '/img/vlr/tmp/vlr.png':
+                img = "https://vlr.gg" + img
+            else:
+                img = "https:" + img
+            h2h['event'] = { 'img': img, 'event': h2hEvent, 'stage': h2hStage }
+            h2h['date'] = matchLink.find_all('div',class_="match-h2h-matches-date")[0].get_text().strip()
+            images = matchLink.find_all('img',class_="match-h2h-matches-team")
+            score1 = matchLink.find_all('span', class_="rf")[0]
+            score2 = matchLink.find_all('span', class_="ra")[0]
+            h2h['teams'] = []
+            for image in images:
+                img = image['src']
+                if img == '/img/vlr/tmp/vlr.png':
+                    img = "https://vlr.gg" + img
+                else:
+                    img = "https:" + img
+                isWin = False
+                if 'mod-win' in image.get('class'):
+                    isWin = True
+                h2h['teams'].append({'team': img, 'winner': isWin})
+            h2h['teams'][0]['score'] = score1.get_text().strip()
+            h2h['teams'][1]['score'] = score2.get_text().strip()
+            h2hMatches.append(h2h)
+
+        return {'teams': teams, 'score': score, 'note': note, 'event': event, 'data': mapData, 'head2head': h2hMatches }
 
     
 
