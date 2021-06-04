@@ -41,6 +41,20 @@ async def matches():
     """
     return Matches.recent_matches()
 
+@app.get("/matches/schedule", tags=["matches"])
+async def matches():
+    """
+    Gets upcoming matches from the VLR matches
+    """
+    return Matches.match_schedule()
+
+@app.get("/matches/results", tags=["matches"])
+async def matches():
+    """
+    Gets results of recent matches from the VLR matches
+    """
+    return Matches.match_results()
+
 @app.get("/streams", tags=["news"])
 async def streams():
     """

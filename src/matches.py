@@ -34,16 +34,13 @@ class Matches:
             status = matchItem.find_all('div', class_="h-match-eta")[0].get_text().strip()
             link = matchItem.get('href')
             id = link.split("/")[0]
-            match["team1"] = team1
-            match["team2"] = team2
-            match["score1"] = score1
-            match["score2"] = score2
+            match["team1"] = { 'name' : team1, 'score': score1 }
+            match["team2"] = { 'name' : team2, 'score': score2 }
             match["status"] = status
             match["link"] = link
             match["id"] = id
             matchesDict.append(match)
-        pp.pprint(matchesDict)
-        return matchesDict
+        return matchesDict[:5]
 
 
     def recent_matches():
@@ -70,16 +67,13 @@ class Matches:
             status = matchItem.find_all('div', class_="h-match-eta")[0].get_text().strip()
             link = matchItem.get('href')
             id = link.split("/")[0]
-            match["team1"] = team1
-            match["team2"] = team2
-            match["score1"] = score1
-            match["score2"] = score2
+            match["team1"] = { 'name' : team1, 'score': score1 }
+            match["team2"] = { 'name' : team2, 'score': score2 }
             match["status"] = status
             match["link"] = link
             match["id"] = id
             matchesDict.append(match)
-        pp.pprint(matchesDict)
-        return matchesDict
+        return matchesDict[:5]
 
     def match_schedule():
         """
@@ -104,21 +98,24 @@ class Matches:
                     team2 = matchItem.find_all('div', class_="match-item-vs-team-name")[1].get_text().strip()
                     score1 = matchItem.find_all('div', class_="match-item-vs-team-score")[0].get_text().strip()
                     score2 = matchItem.find_all('div', class_="match-item-vs-team-score")[1].get_text().strip()
-                    status = matchItem.find_all('div', class_="ml")[0].get_text().strip()
+                    status = matchItem.find_all('div', class_="ml")[0].get_text().strip().replace('\n', ' - ')
                     eventTitle = matchItem.find_all('div', class_="match-item-event")[0].get_text().strip().split("\t")[-1]
                     eventStage = matchItem.find_all('div', class_="match-item-event-series")[0].get_text().strip()
-                    icon = matchItem.find_all('div', class_="match-item-icon")[0].find('img')['src']
+                    img = matchItem.find_all('div', class_="match-item-icon")[0].find('img')['src']
+                    if img == '/img/vlr/tmp/vlr.png':
+                        img = "https://vlr.gg" + img
+                    else:
+                        img = "https:" + img
                     link = matchItem.get('href')
                     id = link.split("/")[1].split("/")[0]
                     match["date"] = key.get_text().strip()
-                    match["team1"] = team1
-                    match["team2"] = team2
-                    match["score1"] = score1
-                    match["score2"] = score2
+                    match["time"] = time
+                    match["team1"] = { 'name' : team1, 'score': score1 }
+                    match["team2"] = { 'name' : team2, 'score': score2 }
                     match["status"] = status
                     match["link"] = link
                     match["id"] = id
-                    match["event"] = { "name" : eventTitle, "stage": eventStage, "icon" : icon }
+                    match["event"] = { "name" : eventTitle, "stage": eventStage, "icon" : img }
                     matchesDict.append(match)
                 cards.remove(value)
                 break
@@ -148,21 +145,24 @@ class Matches:
                     team2 = matchItem.find_all('div', class_="match-item-vs-team-name")[1].get_text().strip()
                     score1 = matchItem.find_all('div', class_="match-item-vs-team-score")[0].get_text().strip()
                     score2 = matchItem.find_all('div', class_="match-item-vs-team-score")[1].get_text().strip()
-                    status = matchItem.find_all('div', class_="ml")[0].get_text().strip()
+                    status = matchItem.find_all('div', class_="ml")[0].get_text().strip().replace('\n', ' - ')
                     eventTitle = matchItem.find_all('div', class_="match-item-event")[0].get_text().strip().split("\t")[-1]
                     eventStage = matchItem.find_all('div', class_="match-item-event-series")[0].get_text().strip()
-                    icon = matchItem.find_all('div', class_="match-item-icon")[0].find('img')['src']
+                    img = matchItem.find_all('div', class_="match-item-icon")[0].find('img')['src']
+                    if img == '/img/vlr/tmp/vlr.png':
+                        img = "https://vlr.gg" + img
+                    else:
+                        img = "https:" + img
                     link = matchItem.get('href')
                     id = link.split("/")[1].split("/")[0]
-                    match["date"] = key.get_text().strip()
-                    match["team1"] = team1
-                    match["team2"] = team2
-                    match["score1"] = score1
-                    match["score2"] = score2
+                    match["date"] = key.get_text().strip().split(" \n")[0]
+                    match["time"] = time
+                    match["team1"] = { 'name' : team1, 'score': score1 }
+                    match["team2"] = { 'name' : team2, 'score': score2 }
                     match["status"] = status
                     match["link"] = link
                     match["id"] = id
-                    match["event"] = { "name" : eventTitle, "stage": eventStage, "icon" : icon }
+                    match["event"] = { "name" : eventTitle, "stage": eventStage, "icon" : img }
                     matchesDict.append(match)
                 cards.remove(value)
                 break
