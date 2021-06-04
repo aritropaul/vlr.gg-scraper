@@ -81,4 +81,8 @@ class Team:
         basic_info()
         roster()
         transaction()
-        return { "team" : id, "header" : header_info, "roster": roster_info, "transactions": transaction_info }
+        team = header_info
+        team['id'] = id
+        team['roster'] = roster_info
+        team['transactions'] = transaction_info
+        return team
