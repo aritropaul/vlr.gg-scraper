@@ -300,7 +300,7 @@ class Matches:
                     members.append(member)
                     print(name, teamName, agents)
                 print('')
-            mapData.append([{'map': mapName, 'teams': [team1Obj, team2Obj], 'members': members, 'rounds': rounds}])
+            mapData.append({'map': mapName, 'teams': [team1Obj, team2Obj], 'members': members, 'rounds': rounds})
 
         head2headContainer = soup.find_all('div',class_="match-h2h-matches")[0]
         h2hMatchLinks = head2headContainer.find_all('a',class_="wf-module-item mod-h2h")
