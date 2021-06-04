@@ -5,6 +5,7 @@ from src.team import Team
 from src.player import Player
 from src.events import Events
 from src.streams import Streams
+from src.rankings import Rankings
 
 app = FastAPI()
 
@@ -54,3 +55,18 @@ async def events(region):
 async def events(id):
     events = Events()
     return events.event(id)
+
+@app.get("/rankings")
+async def rankings():
+    rankings = Rankings()
+    return rankings.worldRanking()
+
+@app.get("/rankings/regions")
+async def rankings():
+    rankings = Rankings()
+    return rankings.regions()
+
+@app.get("/rankings/{region}")
+async def rankings(region):
+    rankings = Rankings()
+    return rankings.regionRankings(region)
