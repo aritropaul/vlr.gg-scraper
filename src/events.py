@@ -235,20 +235,3 @@ class Events:
             match['stage'] = matchHTML.find_all('div', class_="match-item-event text-of")[0].get_text().strip().split('\n')[1].strip()
             matches.append(match)
         return matches
-
-
-    def region(self, id):
-        if id == "all":
-            return self.events("")
-        elif id == "NA":
-            return self.events("north-america")
-        elif id == "EU":
-            return self.events("europe")
-        elif id == "SEA":
-            return self.events("asia-pacific")
-        elif id == "LATAM":
-            return self.events("latin-america")
-        elif id == "MENA":
-            return self.events("mena")
-        else:
-            print("unknown")

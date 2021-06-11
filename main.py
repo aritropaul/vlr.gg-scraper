@@ -89,7 +89,7 @@ async def events():
     Gets all events from the VLR events page
     """
     events = Events()
-    return events.region("all")
+    return events.events("")
 
 @app.get("/events/{region}", tags=["events"])
 async def events(region):
@@ -97,7 +97,7 @@ async def events(region):
     Gets all events in a particular region
     """
     events = Events()
-    return events.region(region)
+    return events.events(region)
 
 @app.get("/event/{id}", tags=["events"])
 async def events(id):
