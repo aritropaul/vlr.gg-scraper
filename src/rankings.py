@@ -19,6 +19,7 @@ class Rankings:
             teamsHTML = region.find_all('tr', class_="wf-card")
             teams = []
             for team in teamsHTML:
+                id = team.find_all('td')[1].find('a')['href'].split('/')[2]
                 rank = team.find_all('td')[0].get_text().strip()
                 teamName = team.find_all('td')[1].get_text().strip().split('\t')[0]
                 country = team.find_all('td')[1].find_all('div', class_="rank-item-team-country")[0].get_text().strip()
@@ -32,7 +33,7 @@ class Rankings:
                     change = team.find_all('td')[2].find('i',class_="fa").get('class')[1].split('-')[-1]
                 else:
                     change = "no change"
-                teams.append({'name': teamName, 'country':country, 'rank':rank, 'img': img, 'rating': rating, 'change': change})
+                teams.append({'id': id, 'name': teamName, 'country':country, 'rank':rank, 'img': img, 'rating': rating, 'change': change})
             ranking.append({'region':name, 'rankings': teams})
         return ranking
 
