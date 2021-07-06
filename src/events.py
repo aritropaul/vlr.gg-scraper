@@ -134,7 +134,10 @@ class Events:
                 else:
                     img = "https:" + img
                 participant['img'] = img
-                participant['seed'] = team.find_all('div', class_="wf-module-item")[0].get_text().strip()
+                if len(team.find_all('div', class_="wf-module-item")) > 0:
+                    participant['seed'] = team.find_all('div', class_="wf-module-item")[0].get_text().strip()
+                else:
+                    participant['seed'] = ""
                 players = team.find_all('a', class_="event-team-players-item")
                 for player in players:
                     playerID = player['href'].split('/')[2]
@@ -208,7 +211,7 @@ class Events:
                 team['country'] = teamRow.find_all('div',class_="ge-text-light")[0].get_text().strip()
                 prize['team'] = team
             else:
-                prize['tema'] = "TBD"
+                prize['team'] = "TBD"
             prizes.append(prize)
         return prizes
 
